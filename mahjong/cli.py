@@ -1,7 +1,5 @@
 import random
-from mahjong import Mahjong
-from player import Player
-from haipai import Haipai
+import libs
 
 
 _TURN = 0
@@ -78,8 +76,9 @@ def run():
             if this_player == 1:
                 print('# PLAYER1 配牌: '+str(player_hai))
 
-                _HAIPAI.check(tehai)
+                print(player_hai)
 
+                # 入力
                 value = input('$ Enter an Hai: ')
 
                 # 空エンター
@@ -165,12 +164,12 @@ def setup():
 def init():
     global _MAHJONG, _HAIPAI, _CHIICHA_P
 
-    _MAHJONG = Mahjong()
-    _HAIPAI = Haipai()
+    _MAHJONG = libs.Mahjong()
+    _HAIPAI = libs.Haipai()
 
     # プレイヤー
     for i in range(1, 5):
-        globals()['_PLAYER'+str(i)] = Player()
+        globals()['_PLAYER'+str(i)] = libs.Player()
 
     # サイ振り決め
     dice = _MAHJONG.dice()
@@ -192,7 +191,7 @@ def init():
 
 
 # 処理開始
-if __name__ == '__main__':
+def main():
     print('------------------------------')
 
     # 初期化

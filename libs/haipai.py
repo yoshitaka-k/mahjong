@@ -23,18 +23,18 @@ class Haipai(object):
 
     # 順子確認
     def check_juntu(self):
-        print('# 順子確認')
+        # print('# 順子確認')
         for i in self.__split__:
-            print(i)
-        pass
+            # print(i)
+            pass
 
 
     # 刻子確認
     def check_kotu(self):
-        print('# 刻子確認')
+        # print('# 刻子確認')
         for i in self.__split__:
-            print(i)
-        pass
+            # print(i)
+            pass
 
 
     def split(self):
