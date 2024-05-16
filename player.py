@@ -1,47 +1,91 @@
 import re
 
+
 class Player:
     __score__ = 0
-    __hai__ = []
+    __tehai__ = []
     __kawa__ = []
+    __meld__ = []
+
 
     # 初期化
     def __init__(self):
         self.__score__ = 0
-        self.__hai__ = []
+        self.__tehai__ = []
         self.__kawa__ = []
+        self.__meld__ = [
+            [], [], [], []
+        ]
+
 
     # スコア追加
     def set_score(self, score):
         self.__score__ = score
 
+
     # スコア取得
     def get_score(self):
         return self.__score__
 
+
     # 牌追加
     def set_hai(self, hai):
-        self.__hai__.append(hai)
+        self.__tehai__.append(hai)
+
 
     # 牌取得
-    def get_hai(self):
-        return self.__hai__
+    def get_tehai(self, index=None):
+        if index is None:
+            return self.__tehai__
+        else:
+            return self.__tehai__[index]
+
+
+    # 捨牌
+    def pop(self, index):
+        return self.__tehai__.pop(index)
+
 
     # 理牌
     def sort(self):
         pass
 
+
+    # 河初期化
+    def init_kawa(self):
+        self.__kawa__ = []
+
+
     # 河追加
     def set_kawa(self, kawa):
-        self.__kawa__ = kawa
+        self.__kawa__.append(kawa)
+
 
     # 河取得
     def get_kawa(self):
         return self.__kawa__
 
+
+    # 副露
+    def set_meld(self, type, hai):
+        # ポン
+        if type == 'p':
+            index = [i for i, x in enurate(self.__tehai__) if x == hai]
+            pass
+
+        # チー
+        elif type == 'c':
+            pass
+
+        # カン
+        if type == 'k':
+            index = [i for i, x in enurate(self.__tehai__) if x == hai]
+            pass
+
+
     # 理牌
     def repai(self):
-        hai = []
+        tehai = []
         m = []
         p = []
         s = []
@@ -53,30 +97,30 @@ class Player:
         j2 = []
         j3 = []
 
-        hai = self.__hai__
-        hai.sort()
+        tehai = self.__tehai__
+        tehai.sort()
 
-        length = len(hai)
+        length = len(tehai)
         for i in range(length):
-            if re.search('^m[0-9]', hai[0]):
-                m.append(hai.pop(0))
-            elif re.search('^p[0-9]', hai[0]):
-                p.append(hai.pop(0))
-            elif re.search('^s[0-9]', hai[0]):
-                s.append(hai.pop(0))
-            elif hai[0] == 'e':
-                k1.append(hai.pop(0))
-            elif hai[0] == 'n':
-                k2.append(hai.pop(0))
-            elif hai[0] == 'w':
-                k3.append(hai.pop(0))
-            elif hai[0] == 's':
-                k4.append(hai.pop(0))
-            elif hai[0] == 'hk':
-                j1.append(hai.pop(0))
-            elif hai[0] == 'ht':
-                j2.append(hai.pop(0))
-            elif hai[0] == 'tn':
-                j3.append(hai.pop(0))
+            if re.search('^m[0-9]', tehai[0]):
+                m.append(tehai.pop(0))
+            elif re.search('^p[0-9]', tehai[0]):
+                p.append(tehai.pop(0))
+            elif re.search('^s[0-9]', tehai[0]):
+                s.append(tehai.pop(0))
+            elif tehai[0] == 'E':
+                k1.append(tehai.pop(0))
+            elif tehai[0] == 'N':
+                k2.append(tehai.pop(0))
+            elif tehai[0] == 'W':
+                k3.append(tehai.pop(0))
+            elif tehai[0] == 'S':
+                k4.append(tehai.pop(0))
+            elif tehai[0] == 'hk':
+                j1.append(tehai.pop(0))
+            elif tehai[0] == 'ht':
+                j2.append(tehai.pop(0))
+            elif tehai[0] == 'tn':
+                j3.append(tehai.pop(0))
 
-        self.__hai__ = m + p + s + k1 + k2 + k3 + k4 + j1 + j2 + j3
+        self.__tehai__ = m + p + s + k1 + k2 + k3 + k4 + j1 + j2 + j3

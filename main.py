@@ -1,12 +1,16 @@
 import random
+from mahjong import Mahjong
 from player import Player
+from haipai import Haipai
 
 
-_CHIICHA = 0
+_TURN = 0
 
-_YAMA = []
-_WANPAI = []
-_DORA = []
+_CHIICHA_P = 0
+
+_MAHJONG = None
+
+_HAIPAI = None
 
 _PLAYER1 = None
 _PLAYER2 = None
@@ -16,156 +20,191 @@ _PLAYER4 = None
 
 # 配牌
 def haipai():
-    global _YAMA
-
     # 12枚
     for i in range(3):
         for j in range(4):
-            k = _CHIICHA + j
+            k = _CHIICHA_P + j
             if k > 4:
                 k = k - 4
             for l in range(4):
-                globals()['_PLAYER'+str(k)].set_hai(_YAMA.pop(0))
+                globals()['_PLAYER'+str(k)].set_hai(_MAHJONG.get_yama().pop(0))
 
     # 13枚
     for i in range(4):
-        k = _CHIICHA + i
+        k = _CHIICHA_P + i
         if k > 4:
             k = k - 4
-        globals()['_PLAYER'+str(k)].set_hai(_YAMA.pop(0))
+        globals()['_PLAYER'+str(k)].set_hai(_MAHJONG.get_yama().pop(0))
 
         # 14枚
-        if k == _CHIICHA:
-            globals()['_PLAYER'+str(k)].set_hai(_YAMA.pop(0))
+        if k == _CHIICHA_P:
+            globals()['_PLAYER'+str(k)].set_hai(_MAHJONG.get_yama().pop(0))
 
 
-# 王牌
-def wanpai():
-    global _YAMA, _WANPAI
+# ゲーム処理
+def run():
+    global _MAHJONG, _TURN
 
-    for i in range(14):
-        _WANPAI.append(_YAMA.pop(0))
+    this_player = _CHIICHA_P
+    tehai = _PLAYER1.get_tehai()
+
+    hai = None
+
+    try:
+        while True:
+
+            _TURN = _TURN + 1
+
+            if _TURN != 1:
+                hai = _MAHJONG.draw()
+
+                print('# TURN: '+str(_TURN)+' / ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / This PLAYER: '+str(this_player))
+                print('# ツモ: '+str(hai))
+
+                if hai is None:
+                    print('流局しました。')
+                    return
+
+                else:
+                    globals()['_PLAYER'+str(this_player)].set_hai(hai)
+
+            else:
+                print('# TURN: '+str(_TURN)+' / ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / This PLAYER: '+str(this_player))
 
 
-# サイ振り・起家決め
-def start_player(dice):
-    l = 0
-    for i in range(1, dice+1):
-        l = i
-        if i > 8:
-            l = i - 8
-        elif i > 4:
-            l = i - 4
-    return l
+            player_hai = globals()['_PLAYER'+str(this_player)].get_tehai()
 
+            # プレイヤー
+            if this_player == 1:
+                print('# PLAYER1 配牌: '+str(player_hai))
 
-# サイ振り
-def dice_shuffle():
-    dice = [
-        random.randrange(1, 7),
-        random.randrange(1, 7)
-    ]
-    return sum(dice)
+                _HAIPAI.check(tehai)
 
+                value = input('$ Enter an Hai: ')
 
-# ヤマ積み
-def yamadumi():
-    global _YAMA
+                # 空エンター
+                if value == '':
+                    hai = globals()['_PLAYER'+str(this_player)].pop(len(player_hai)-1)
+                    globals()['_PLAYER'+str(this_player)].set_kawa(hai)
 
-    yama = []
+                else:
+                    # 捨て牌選択
+                    while (value in player_hai) == False:
+                        value = input('$ Enter an Hai: ')
 
-    for i in range(1, 10): # 萬子
-        for l in range(4):
-            yama.append('m'+str(i))
-    for i in range(1, 10): # 筒子
-        for l in range(4):
-            yama.append('p'+str(i))
-    for i in range(1, 10): # 索子
-        for l in range(4):
-            yama.append('s'+str(i))
+                    hai = globals()['_PLAYER'+str(this_player)].pop(player_hai.index(value))
+                    globals()['_PLAYER'+str(this_player)].set_kawa(hai)
 
-    for l in range(4):
-        yama.append('e')
-    for l in range(4):
-        yama.append('n')
-    for l in range(4):
-        yama.append('w')
-    for l in range(4):
-        yama.append('s')
+                tehai = globals()['_PLAYER'+str(this_player)].get_tehai()
 
-    for l in range(4):
-        yama.append('hk')
-    for l in range(4):
-        yama.append('ht')
-    for l in range(4):
-        yama.append('tn')
+            # CPU
+            else:
+                # とりあえずツモ切り
+                hai = globals()['_PLAYER'+str(this_player)].pop(len(player_hai)-1)
+                globals()['_PLAYER'+str(this_player)].set_kawa(hai)
 
-    for i in range(0, 5): # 洗牌
-        random.shuffle(yama)
+            print('# PLAYER'+str(this_player)+' 捨牌: '+hai)
+            print('# PLAYER'+str(this_player)+' 河: '+str(globals()['_PLAYER'+str(this_player)].get_kawa()))
 
-    _YAMA = yama
+            globals()['_PLAYER'+str(this_player)].repai()
+
+            # ポン確認
+            if _MAHJONG.check_pon(tehai, hai):
+                globals()['_PLAYER'+str(this_player)].set_meld('p', hai)
+                this_player = 1
+
+            # チー確認
+            elif _MAHJONG.check_chii(tehai, hai):
+                globals()['_PLAYER'+str(this_player)].set_meld('c', hai)
+                this_player = 1
+
+            # カン確認
+            elif _MAHJONG.check_kan(tehai, hai):
+                globals()['_PLAYER'+str(this_player)].set_meld('k', hai)
+                this_player = 1
+
+            else:
+                this_player = this_player + 1
+                if this_player > 4:
+                    this_player = 1
+
+            print('------------------------------')
+
+    except KeyboardInterrupt:
+        print('入力中断')
 
 
 # ゲーム準備
 def setup():
-    global _WANPAI, _DORA
+    global _MAHJONG, _TURN
 
     # ヤマ積む
-    yamadumi()
+    _MAHJONG.init_yama()
 
     # 王牌
-    wanpai()
+    _MAHJONG.init_wanpai()
 
     # 配牌
     haipai()
 
-    # 理牌
     for i in range(1, 5):
+        # 河初期化
+        globals()['_PLAYER'+str(i)].init_kawa()
+
+        # 理牌
         globals()['_PLAYER'+str(i)].repai()
 
     # ドラ
-    _DORA = _WANPAI.pop(0)
+    _MAHJONG.set_dora()
+
+    # ターン数
+    _TURN = 0
 
 
 # 初期化
 def init():
-    global _CHIICHA
+    global _MAHJONG, _HAIPAI, _CHIICHA_P
+
+    _MAHJONG = Mahjong()
+    _HAIPAI = Haipai()
 
     # プレイヤー
     for i in range(1, 5):
         globals()['_PLAYER'+str(i)] = Player()
 
     # サイ振り決め
-    dice = dice_shuffle()
-    print('DICE: '+str(dice))
+    dice = _MAHJONG.dice()
 
-    dice_player = start_player(dice)
-    print('サイ振り: _PLAYER'+str(dice_player))
+    dice_player = _MAHJONG.chicha(dice)
+    print('# サイ振り: _PLAYER'+str(dice_player))
 
     # 起家決め
-    dice = dice_shuffle()
-    print('DICE: '+str(dice))
+    dice = _MAHJONG.dice()
 
-    chiha = start_player(dice)
+    c = _MAHJONG.chicha(dice)
 
-    chiha = chiha + dice_player - 1
-    if chiha > 4:
-        chiha = chiha - 4
-    _CHIICHA = chiha
+    c = c + dice_player - 1
+    if c > 4:
+        c = c - 4
+    _CHIICHA_P = c
 
-    print('起家: _PLAYER'+str(_CHIICHA))
+    print('# 起家: _PLAYER'+str(_CHIICHA_P))
 
 
+# 処理開始
 if __name__ == '__main__':
+    print('------------------------------')
+
     # 初期化
     init()
 
     # ゲーム準備
     setup()
 
-    print('ヤマ数:'+str(len(_YAMA)))
-    print('王牌数:'+str(len(_WANPAI)))
-    print('ドラ: '+str(_DORA))
+    print('# ドラ: '+str(_MAHJONG.get_dora()))
+    print('# PLAYER1 配牌: '+str(_PLAYER1.get_tehai()))
 
-    print('PLAYER1 配牌')
-    print(_PLAYER1.get_hai())
+    print('------------------------------')
+
+    # ゲーム処理
+    run()
