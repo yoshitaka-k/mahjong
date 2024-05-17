@@ -18,6 +18,8 @@ _PLAYER4 = None
 
 # 配牌
 def haipai():
+    yama = _MAHJONG.get_yama()
+
     # 12枚
     for i in range(3):
         for j in range(4):
@@ -25,18 +27,19 @@ def haipai():
             if k > 4:
                 k = k - 4
             for l in range(4):
-                globals()['_PLAYER'+str(k)].set_hai(_MAHJONG.get_yama().pop(0))
+                globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
 
     # 13枚
     for i in range(4):
         k = _CHIICHA_P + i
         if k > 4:
             k = k - 4
-        globals()['_PLAYER'+str(k)].set_hai(_MAHJONG.get_yama().pop(0))
+
+        globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
 
         # 14枚
         if k == _CHIICHA_P:
-            globals()['_PLAYER'+str(k)].set_hai(_MAHJONG.get_yama().pop(0))
+            globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
 
 
 # ゲーム処理
@@ -54,15 +57,14 @@ def run():
 
             _TURN = _TURN + 1
 
-            # 1ターン目はツモなし
-            if _TURN == 1:
-                print('# TURN: '+str(_TURN)+' / ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / This PLAYER: '+str(this_player))
-
-            else:
-                # ツモ
+            # 2ターン目以上ツモ
+            if _TURN > 1:
                 draw_hai = _MAHJONG.draw()
 
-                print('# TURN: '+str(_TURN)+' / ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / This PLAYER: '+str(this_player))
+            print('# TURN: '+str(_TURN)+' / This PLAYER: '+str(this_player))
+            print('# ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / ドラ表示牌: '+str(_MAHJONG.get_dora()))
+
+            if _TURN > 1:
                 print('# ツモ: '+str(draw_hai))
 
                 if draw_hai is None:
@@ -194,7 +196,7 @@ def init():
 
 # 処理開始
 def main():
-    print('------------------------------')
+    print('==============================')
 
     # 初期化
     init()
@@ -203,9 +205,9 @@ def main():
     setup()
 
     print('# ドラ: '+str(_MAHJONG.get_dora()))
-    print('# PLAYER1 配牌: '+str(_PLAYER1.get_tehai()))
+    # print('# PLAYER1 配牌: '+str(_PLAYER1.get_tehai()))
 
-    print('------------------------------')
+    print('==============================')
 
     # ゲーム処理
     run()

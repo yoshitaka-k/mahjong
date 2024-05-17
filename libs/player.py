@@ -30,7 +30,11 @@ class Player:
 
     # 牌追加
     def set_hai(self, hai):
-        self.__tehai__.append(hai)
+        if type(hai) is str:
+            self.__tehai__.append(hai)
+        elif type(hai) is list:
+            self.__tehai__.extend(hai)
+
 
 
     # 牌取得
@@ -57,8 +61,11 @@ class Player:
 
 
     # 河追加
-    def set_kawa(self, kawa):
-        self.__kawa__.append(kawa)
+    def set_kawa(self, hai):
+        if type(hai) is str:
+            self.__kawa__.append(hai)
+        elif type(hai) is list:
+            self.__kawa__.extend(hai)
 
 
     # 河取得
@@ -70,7 +77,7 @@ class Player:
     def set_meld(self, type, hai):
         # ポン
         if type == 'p':
-            index = [i for i, x in enurate(self.__tehai__) if x == hai]
+            index = [i for i, x in enumerate(self.__tehai__) if x == hai]
             pass
 
         # チー
@@ -79,7 +86,7 @@ class Player:
 
         # カン
         if type == 'k':
-            index = [i for i, x in enurate(self.__tehai__) if x == hai]
+            index = [i for i, x in enumerate(self.__tehai__) if x == hai]
             pass
 
 
