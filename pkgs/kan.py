@@ -1,0 +1,2 @@
+def kan(self):
+    pass

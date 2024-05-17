@@ -39,14 +39,14 @@ class Mahjong:
     def init_yama(self):
         yama = []
 
-        for i in range(1, 10): # 萬子
-            for l in range(4):
+        for l in range(4): # 萬子
+            for i in range(1, 10):
                 yama.append('m'+str(i))
-        for i in range(1, 10): # 筒子
-            for l in range(4):
+        for l in range(4): # 筒子
+            for i in range(1, 10):
                 yama.append('p'+str(i))
-        for i in range(1, 10): # 索子
-            for l in range(4):
+        for l in range(4): # 索子
+            for i in range(1, 10):
                 yama.append('s'+str(i))
 
         for l in range(4):
@@ -65,8 +65,9 @@ class Mahjong:
         for l in range(4):
             yama.append('tn')
 
-        for i in range(0, 5): # 洗牌
+        for i in range(5): # 洗牌
             random.shuffle(yama)
+            pass
 
         self.__yama__ = yama
 

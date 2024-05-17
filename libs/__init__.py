@@ -1,3 +1,2 @@
-from .mahjong import Mahjong
-from .player import Player
-from .haipai import Haipai
+from libs.mahjong import Mahjong
+from libs.player import Player

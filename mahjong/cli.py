@@ -1,14 +1,14 @@
 import random
 import libs
+import pkgs
 
 
+# 変数
 _TURN = 0
 
 _CHIICHA_P = 0
 
 _MAHJONG = None
-
-_HAIPAI = None
 
 _PLAYER1 = None
 _PLAYER2 = None
@@ -46,38 +46,41 @@ def run():
     this_player = _CHIICHA_P
     tehai = _PLAYER1.get_tehai()
 
-    hai = None
+    draw_hai = None
+    player_hai = []
 
     try:
         while True:
 
             _TURN = _TURN + 1
 
-            if _TURN != 1:
-                hai = _MAHJONG.draw()
+            # 1ターン目はツモなし
+            if _TURN == 1:
+                print('# TURN: '+str(_TURN)+' / ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / This PLAYER: '+str(this_player))
+
+            else:
+                # ツモ
+                draw_hai = _MAHJONG.draw()
 
                 print('# TURN: '+str(_TURN)+' / ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / This PLAYER: '+str(this_player))
-                print('# ツモ: '+str(hai))
+                print('# ツモ: '+str(draw_hai))
 
-                if hai is None:
+                if draw_hai is None:
                     print('流局しました。')
                     return
 
                 else:
-                    globals()['_PLAYER'+str(this_player)].set_hai(hai)
-
-            else:
-                print('# TURN: '+str(_TURN)+' / ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / This PLAYER: '+str(this_player))
-
+                    globals()['_PLAYER'+str(this_player)].set_hai(draw_hai)
 
             player_hai = globals()['_PLAYER'+str(this_player)].get_tehai()
 
+            print('# PLAYER'+str(this_player)+' 配牌: '+str(player_hai))
+
+            # 手牌確認
+            pkgs.haipai(player_hai)
+
             # プレイヤー
             if this_player == 1:
-                print('# PLAYER1 配牌: '+str(player_hai))
-
-                print(player_hai)
-
                 # 入力
                 value = input('$ Enter an Hai: ')
 
@@ -162,10 +165,9 @@ def setup():
 
 # 初期化
 def init():
-    global _MAHJONG, _HAIPAI, _CHIICHA_P
+    global _MAHJONG, _CHIICHA_P
 
     _MAHJONG = libs.Mahjong()
-    _HAIPAI = libs.Haipai()
 
     # プレイヤー
     for i in range(1, 5):
@@ -175,7 +177,7 @@ def init():
     dice = _MAHJONG.dice()
 
     dice_player = _MAHJONG.chicha(dice)
-    print('# サイ振り: _PLAYER'+str(dice_player))
+    print('# サイ振り: PLAYER'+str(dice_player))
 
     # 起家決め
     dice = _MAHJONG.dice()
@@ -187,7 +189,7 @@ def init():
         c = c - 4
     _CHIICHA_P = c
 
-    print('# 起家: _PLAYER'+str(_CHIICHA_P))
+    print('# 起家: PLAYER'+str(_CHIICHA_P))
 
 
 # 処理開始
