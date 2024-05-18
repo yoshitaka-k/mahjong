@@ -28,8 +28,13 @@ def run_player(current):
         hai = globals()['_PLAYER'+str(current)].pop(len(tehai)-1)
         globals()['_PLAYER'+str(current)].set_kawa(hai)
 
+        print('# PLAYER'+str(current)+' 捨牌: '+hai)
+        print('# PLAYER'+str(current)+' 河: '+str(globals()['_PLAYER'+str(current)].get_kawa()))
+
     # プレイヤー処理
     else:
+        print('# PLAYER'+str(current)+' 河: '+str(globals()['_PLAYER'+str(current)].get_kawa()))
+
         # 入力
         value = input('$ Enter an Hai: ')
 
