@@ -18,41 +18,75 @@ _PLAYER3 = None
 _PLAYER4 = None
 
 
+# プレイヤー処理
+def run_player(current):
+    tehai = globals()['_PLAYER'+str(current)].get_tehai()
+
+    # CPU処理
+    if current != 1:
+        # とりあえずツモ切り
+        hai = globals()['_PLAYER'+str(current)].pop(len(tehai)-1)
+        globals()['_PLAYER'+str(current)].set_kawa(hai)
+
+    # プレイヤー処理
+    else:
+        # 入力
+        value = input('$ Enter an Hai: ')
+
+        # 空エンター
+        if value == '':
+            hai = _PLAYER1.pop(len(tehai)-1)
+            _PLAYER1.set_kawa(hai)
+
+        else:
+            # 捨て牌選択
+            while (value in tehai) == False:
+                value = input('$ Enter an Hai: ')
+
+            hai = _PLAYER1.pop(tehai.index(value))
+            _PLAYER1.set_kawa(hai)
+
+        print('# PLAYER'+str(current)+' 捨牌: '+hai)
+        print('# PLAYER'+str(current)+' 河: '+str(_PLAYER1.get_kawa()))
+
+    return hai
+
+
 # 配牌
 def haipai():
     yama = _MAHJONG.get_yama()
 
+    # 取る順番
+    pliyer_list = []
+    for i in range(_NUM_OF_PLAYER):
+        p = _CHIICHA_P + i
+        if p > _NUM_OF_PLAYER:
+            p = p - _NUM_OF_PLAYER
+        pliyer_list.append(p)
+
     # 12枚
-    for i in range(3):
-        for j in range(_NUM_OF_PLAYER):
-            k = _CHIICHA_P + j
-            if k > _NUM_OF_PLAYER:
-                k = k - _NUM_OF_PLAYER
+    for l in range(3):
+        for p in pliyer_list:
             for l in range(4):
-                globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
+                globals()['_PLAYER'+str(p)].set_hai(yama.pop(0))
 
     # 13枚
-    for i in range(_NUM_OF_PLAYER):
-        k = _CHIICHA_P + i
-        if k > _NUM_OF_PLAYER:
-            k = k - _NUM_OF_PLAYER
-
-        globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
+    for p in pliyer_list:
+        globals()['_PLAYER'+str(p)].set_hai(yama.pop(0))
 
         # 14枚
-        if k == _CHIICHA_P:
-            globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
+        if p == _CHIICHA_P:
+            globals()['_PLAYER'+str(p)].set_hai(yama.pop(0))
 
 
 # ゲーム処理
 def run():
     global _MAHJONG, _TURN
 
-    this_player = _CHIICHA_P
+    current = _CHIICHA_P
     tehai = _PLAYER1.get_tehai()
 
     draw_hai = None
-    player_hai = []
 
     try:
         while True:
@@ -63,7 +97,7 @@ def run():
             if _TURN > 1:
                 draw_hai = _MAHJONG.draw()
 
-            print('# TURN: '+str(_TURN)+' / This PLAYER: '+str(this_player))
+            print('# TURN: '+str(_TURN)+' / This PLAYER: '+str(current))
             print('# ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / ドラ表示牌: '+str(_MAHJONG.get_dora()))
 
             if _TURN > 1:
@@ -74,65 +108,43 @@ def run():
                     return
 
                 else:
-                    globals()['_PLAYER'+str(this_player)].set_hai(draw_hai)
+                    globals()['_PLAYER'+str(current)].set_hai(draw_hai)
 
-            player_hai = globals()['_PLAYER'+str(this_player)].get_tehai()
+            tehai = globals()['_PLAYER'+str(current)].get_tehai()
 
-            print('# PLAYER'+str(this_player)+' 配牌: '+str(player_hai))
+            print('# PLAYER'+str(current)+' 配牌: '+str(tehai))
 
             # 手牌確認
-            pkgs.haipai(player_hai)
+            pkgs.haipai(tehai)
 
-            # プレイヤー
-            if this_player == 1:
-                # 入力
-                value = input('$ Enter an Hai: ')
+            # プレイヤー処理
+            sutehai = run_player(current)
+            tehai = globals()['_PLAYER'+str(current)].get_tehai()
 
-                # 空エンター
-                if value == '':
-                    hai = globals()['_PLAYER'+str(this_player)].pop(len(player_hai)-1)
-                    globals()['_PLAYER'+str(this_player)].set_kawa(hai)
 
-                else:
-                    # 捨て牌選択
-                    while (value in player_hai) == False:
-                        value = input('$ Enter an Hai: ')
+            tehai = globals()['_PLAYER'+str(current)].get_tehai()
 
-                    hai = globals()['_PLAYER'+str(this_player)].pop(player_hai.index(value))
-                    globals()['_PLAYER'+str(this_player)].set_kawa(hai)
-
-                tehai = globals()['_PLAYER'+str(this_player)].get_tehai()
-
-            # CPU
-            else:
-                # とりあえずツモ切り
-                hai = globals()['_PLAYER'+str(this_player)].pop(len(player_hai)-1)
-                globals()['_PLAYER'+str(this_player)].set_kawa(hai)
-
-            print('# PLAYER'+str(this_player)+' 捨牌: '+hai)
-            print('# PLAYER'+str(this_player)+' 河: '+str(globals()['_PLAYER'+str(this_player)].get_kawa()))
-
-            globals()['_PLAYER'+str(this_player)].repai()
+            globals()['_PLAYER'+str(current)].repai()
 
             # ポン確認
-            if _MAHJONG.check_pon(tehai, hai):
-                globals()['_PLAYER'+str(this_player)].set_meld('p', hai)
-                this_player = 1
+            if _MAHJONG.check_pon(current, tehai, sutehai):
+                globals()['_PLAYER'+str(current)].set_meld('p', sutehai)
+                current = 1
 
             # チー確認
-            elif _MAHJONG.check_chii(tehai, hai):
-                globals()['_PLAYER'+str(this_player)].set_meld('c', hai)
-                this_player = 1
+            elif _MAHJONG.check_chii(current, tehai, sutehai):
+                globals()['_PLAYER'+str(current)].set_meld('c', sutehai)
+                current = 1
 
             # カン確認
-            elif _MAHJONG.check_kan(tehai, hai):
-                globals()['_PLAYER'+str(this_player)].set_meld('k', hai)
-                this_player = 1
+            elif _MAHJONG.check_kan(current, tehai, sutehai):
+                globals()['_PLAYER'+str(current)].set_meld('k', sutehai)
+                current = 1
 
             else:
-                this_player = this_player + 1
-                if this_player > _NUM_OF_PLAYER:
-                    this_player = 1
+                current = current + 1
+                if current > _NUM_OF_PLAYER:
+                    current = 1
 
             print('------------------------------')
 

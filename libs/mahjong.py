@@ -100,25 +100,31 @@ class Mahjong:
 
 
     # ポン確認
-    def check_pon(self, tehai, hai):
+    def check_pon(self, current, tehai, hai):
         if tehai.count(hai) == 2:
-            value = input('ポンしますか？[y/N]: ')
-            if value == '' or value == 'n' or value == 'N':
-                return False
+            if current == 1:
+                value = input('ポンしますか？[y/N]: ')
+                if value == '' or value == 'n' or value == 'N':
+                    return False
+                else:
+                    return True
             else:
-                return True
+                pass
 
 
     # チー確認
-    def check_chii(self, tehai, hai):
+    def check_chii(self, current, tehai, hai):
         pass
 
 
     # カン確認
-    def check_kan(self, tehai, hai):
+    def check_kan(self, current, tehai, hai):
         if tehai.count(hai) == 3:
-            value = input('カンしますか？[y/N]: ')
-            if value == '' or value == 'n' or value == 'N':
-                return False
+            if current == 1:
+                value = input('カンしますか？[y/N]: ')
+                if value == '' or value == 'n' or value == 'N':
+                    return False
+                else:
+                    return True
             else:
-                return True
+                pass
