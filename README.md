@@ -6,8 +6,7 @@
 [![License](https://img.shields.io/github/license/yoshitaka-k/mahjong)](https://github.com/yoshitaka-k/mahjong/blob/master/LICENSE)
 
 
-Pythonの勉強がてら麻雀ゲームでも作ってみようと思って、作成中なぅ  
-ついでに麻雀も勉強中なぅ
+麻雀とPythoとゲーム制作の勉強がてら麻雀ゲームでも作ってみようと思って作成中なぅ  
 
 
 ## License
