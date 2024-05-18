@@ -1,3 +1,5 @@
+from mahjong.setting import _NUM_OF_PLAYER
+
 import random
 
 
@@ -25,14 +27,16 @@ class Mahjong:
 
     # サイ振り・起家決め
     def chicha(self, dice):
-        l = 0
-        for i in range(1, dice+1):
-            l = i
-            if i > 8:
-                l = i - 8
-            elif i > 4:
-                l = i - 4
-        return l
+        print('# サイの目: '+str(dice))
+
+        j = 0
+        for i in range(1, (dice+1)):
+            j = i
+
+            while j > _NUM_OF_PLAYER:
+                j = j - _NUM_OF_PLAYER
+
+        return j
 
 
     # 山積み
@@ -53,7 +57,7 @@ class Mahjong:
         yama.extend(['ht'] * 4)
         yama.extend(['tn'] * 4)
 
-        for i in range(5): # 洗牌
+        for i in range(5):
             random.shuffle(yama)
 
         self.__yama__ = yama

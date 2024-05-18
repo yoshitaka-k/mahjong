@@ -1,3 +1,5 @@
+from mahjong.setting import _NUM_OF_PLAYER
+
 import random
 import libs
 import pkgs
@@ -22,18 +24,18 @@ def haipai():
 
     # 12枚
     for i in range(3):
-        for j in range(4):
+        for j in range(_NUM_OF_PLAYER):
             k = _CHIICHA_P + j
-            if k > 4:
-                k = k - 4
+            if k > _NUM_OF_PLAYER:
+                k = k - _NUM_OF_PLAYER
             for l in range(4):
                 globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
 
     # 13枚
-    for i in range(4):
+    for i in range(_NUM_OF_PLAYER):
         k = _CHIICHA_P + i
-        if k > 4:
-            k = k - 4
+        if k > _NUM_OF_PLAYER:
+            k = k - _NUM_OF_PLAYER
 
         globals()['_PLAYER'+str(k)].set_hai(yama.pop(0))
 
@@ -129,7 +131,7 @@ def run():
 
             else:
                 this_player = this_player + 1
-                if this_player > 4:
+                if this_player > _NUM_OF_PLAYER:
                     this_player = 1
 
             print('------------------------------')
@@ -151,12 +153,12 @@ def setup():
     # 配牌
     haipai()
 
-    for i in range(1, 5):
+    for i in range(_NUM_OF_PLAYER):
         # 河初期化
-        globals()['_PLAYER'+str(i)].init_kawa()
+        globals()['_PLAYER'+str(i+1)].init_kawa()
 
         # 理牌
-        globals()['_PLAYER'+str(i)].repai()
+        globals()['_PLAYER'+str(i+1)].repai()
 
     # ドラ
     _MAHJONG.set_dora()
@@ -172,8 +174,8 @@ def init():
     _MAHJONG = libs.Mahjong()
 
     # プレイヤー
-    for i in range(1, 5):
-        globals()['_PLAYER'+str(i)] = libs.Player()
+    for i in range(_NUM_OF_PLAYER):
+        globals()['_PLAYER'+str(i+1)] = libs.Player()
 
     # サイ振り決め
     dice = _MAHJONG.dice()
@@ -187,8 +189,8 @@ def init():
     c = _MAHJONG.chicha(dice)
 
     c = c + dice_player - 1
-    if c > 4:
-        c = c - 4
+    if c > _NUM_OF_PLAYER:
+        c = c - _NUM_OF_PLAYER
     _CHIICHA_P = c
 
     print('# 起家: PLAYER'+str(_CHIICHA_P))
@@ -197,6 +199,7 @@ def init():
 # 処理開始
 def main():
     print('==============================')
+    print('# プレイ人数: '+str(_NUM_OF_PLAYER) +'人')
 
     # 初期化
     init()
