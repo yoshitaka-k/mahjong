@@ -115,7 +115,7 @@ def run():
             print('# PLAYER'+str(current)+' 配牌: '+str(tehai))
 
             # 手牌確認
-            pkgs.haipai(tehai)
+            pkgs.mentsu(tehai)
 
             # プレイヤー処理
             sutehai = run_player(current)

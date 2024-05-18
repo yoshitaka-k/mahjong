@@ -1,37 +1,40 @@
 import re
 import collections
 
-# 配牌確認
-def haipai(tehai):
+# 面子確認
+def mentsu(tehai):
     tehai_copy = tehai.copy()
 
     split_hai =  __split(tehai_copy)
-    split_hai_copy = split_hai.copy()
 
-    juntu_cnt = __check_juntu(split_hai_copy)
-    kotu_cnt = __check_kotu(split_hai_copy)
+    # juntu_list = __check_juntu(split_hai)
+    kotu_list = __check_kotu(split_hai)
+    print('kotu_list: '+str(kotu_list))
 
-    print('# 刻子: '+str(kotu_cnt))
-    print('# 順子: '+str(juntu_cnt))
+    print('# 刻子: '+str(len(kotu_list)))
+    # print('# 順子: '+str(len(juntu_list)))
 
 
 # 刻子確認
 def __check_kotu(split_hai):
     cnt = 0
-    hai = ''
-    kotu_cnt = 0
+    tmp = ''
+    tmp_list = []
+    kotu_list = []
 
     for i in split_hai:
-        for j in i:
-            if hai == j:
+        for hai in i:
+            if tmp == hai:
+                tmp_list.append(hai)
                 cnt = cnt + 1
             else:
+                tmp_list = []
                 cnt = 0
 
             if cnt > 2:
-                kotu_cnt = kotu_cnt + 1
-            hai = j
-    return kotu_cnt
+                kotu_list.append(tmp_list)
+            tmp = hai
+    return kotu_list
 
 
 # 順子確認
