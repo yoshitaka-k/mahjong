@@ -9,7 +9,7 @@ def mentsu(tehai):
     split_hai =  __split(tehai_copy)
 
     janto_list = __check_janto(split_hai)
-    kotu_list = __check_kotu(split_hai)
+    kotu_list  = __check_kotu(split_hai)
     kantu_list = __check_kantu(split_hai)
     juntu_list = __check_juntu(split_hai)
 
@@ -71,60 +71,48 @@ def __check_juntu(split_hai):
 
     juntu_list = []
 
-    for i in split_hai:
+    for hai_list in split_hai:
+        cnt = 0
+        tmp = 0
         tmp_list = []
-        num_list = []
 
-        length = len(i)
-        for x in range(length):
-            cnt = 0
-            tmp = 0
-            tmp_list = []
+        if len(hai_list) < 3:
+            continue
 
-            if x > 0:
-                i.pop(0)
-
-            if len(i) < 3:
-                continue
-
-            try:
-                index = 0
-                for hai in i:
-                    a, b = hai[:1], int(hai[1:])
-                    if (tmp == 0):
-                        tmp = b
-                        index = index + 1
-                        continue
-
-                    if b == (tmp+1):
-                        if cnt == 0:
-                            tmp_list.append(i[index-1])
-
-                        tmp_list.append(hai)
-                        cnt = cnt + 1
-                    elif b == tmp and cnt > 0:
-                        pass
-                    else:
-                        cnt = 0
-                        tmp_list = []
-
+        try:
+            index = 0
+            for hai in hai_list:
+                a, b = hai[:1], int(hai[1:])
+                if (tmp == 0):
                     tmp = b
-
-                    if cnt > 1:
-                        if tmp_list not in juntu_list:
-                            juntu_list.append(tmp_list)
-
-                        cnt = 0
-                        tmp_list = []
-
                     index = index + 1
+                    continue
 
-            except IndexError:
-                print('配列終わり')
+                if b == (tmp+1):
+                    if cnt == 0:
+                        tmp_list.append(hai_list[index-1])
 
-    length = len(juntu_list)
-    if length < 2:
-        return juntu_list
+                    tmp_list.append(hai)
+                    cnt = cnt + 1
+
+                elif b == tmp and cnt > 0:
+                    pass
+
+                else:
+                    if len(tmp_list) > 2:
+                        juntu_list.append(tmp_list)
+
+                    cnt = 0
+                    tmp_list = []
+
+                tmp = b
+                index = index + 1
+
+            if len(tmp_list) > 2:
+                juntu_list.append(tmp_list)
+
+        except IndexError:
+            print('配列終わり')
 
     return juntu_list
 
