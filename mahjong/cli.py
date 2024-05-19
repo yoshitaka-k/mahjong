@@ -1,5 +1,4 @@
 from mahjong.setting import _NUM_OF_PLAYER
-
 import random
 import libs
 import pkgs

@@ -1,5 +1,4 @@
 from mahjong.setting import _NUM_OF_PLAYER
-
 import random
 
 
@@ -43,10 +42,10 @@ class Mahjong:
     def init_yama(self):
         yama = []
 
-        for i in range(1, 10):
-            yama.extend(['m'+str(i)] * 4)
-            yama.extend(['p'+str(i)] * 4)
-            yama.extend(['s'+str(i)] * 4)
+        for i in range(9):
+            yama.extend(['m'+str(i+1)] * 4)
+            yama.extend(['p'+str(i+1)] * 4)
+            yama.extend(['s'+str(i+1)] * 4)
 
         yama.extend(['E'] * 4)
         yama.extend(['N'] * 4)
