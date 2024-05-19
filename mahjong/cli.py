@@ -94,7 +94,6 @@ def run():
 
     try:
         while True:
-
             _TURN = _TURN + 1
 
             # 2ターン目以上ツモ
@@ -106,16 +105,13 @@ def run():
 
             if _TURN > 1:
                 print('# ツモ: '+str(draw_hai))
-
                 if draw_hai is None:
                     print('流局しました。')
                     return
-
                 else:
                     globals()['_PLAYER'+str(current)].set_hai(draw_hai)
 
             tehai = globals()['_PLAYER'+str(current)].get_tehai()
-
             print('# PLAYER'+str(current)+' 配牌: '+str(tehai))
 
             # 手牌確認
@@ -123,9 +119,6 @@ def run():
 
             # プレイヤー処理
             sutehai = run_player(current)
-            tehai = globals()['_PLAYER'+str(current)].get_tehai()
-
-
             tehai = globals()['_PLAYER'+str(current)].get_tehai()
 
             globals()['_PLAYER'+str(current)].repai()
