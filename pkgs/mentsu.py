@@ -1,88 +1,132 @@
 import re
 import collections
 
+
 # 面子確認
 def mentsu(tehai):
     tehai_copy = tehai.copy()
 
     split_hai =  __split(tehai_copy)
 
-    # juntu_list = __check_juntu(split_hai)
+    janto_list = __check_janto(split_hai)
     kotu_list = __check_kotu(split_hai)
-    print('kotu_list: '+str(kotu_list))
+    kantu_list = __check_kantu(split_hai)
+    juntu_list = __check_juntu(split_hai)
 
-    print('# 刻子: '+str(len(kotu_list)))
-    # print('# 順子: '+str(len(juntu_list)))
+    print('# 雀頭: '+str(janto_list))
+    print('# 刻子: '+str(kotu_list))
+    print('# 槓子: '+str(kantu_list))
+    print('# 順子: '+str(juntu_list))
+
+
+# 雀頭確認（刻子2個確認）
+def __check_janto(split_hai):
+    result = []
+
+    for i in split_hai:
+        cnt_list = collections.Counter(i)
+
+        if 2 in cnt_list.values():
+            for k in cnt_list:
+                if cnt_list[k] == 2:
+                    result.append(k)
+
+    return result
 
 
 # 刻子確認
 def __check_kotu(split_hai):
-    cnt = 0
-    tmp = ''
-    tmp_list = []
-    kotu_list = []
+    result = []
 
     for i in split_hai:
-        for hai in i:
-            if tmp == hai:
-                tmp_list.append(hai)
-                cnt = cnt + 1
-            else:
-                tmp_list = []
-                cnt = 0
+        cnt_list = collections.Counter(i)
 
-            if cnt > 2:
-                kotu_list.append(tmp_list)
-            tmp = hai
-    return kotu_list
+        if 3 in cnt_list.values():
+            for k in cnt_list:
+                if cnt_list[k] == 3:
+                    result.append(k)
+
+    return result
+
+
+# 槓子確認
+def __check_kantu(split_hai):
+    result = []
+
+    for i in split_hai:
+        cnt_list = collections.Counter(i)
+
+        if 4 in cnt_list.values():
+            for k in cnt_list:
+                if cnt_list[k] == 4:
+                    result.append(k)
+
+    return result
 
 
 # 順子確認
 def __check_juntu(split_hai):
+    # 字牌除去
     del split_hai[3:]
-    juntu_cnt = 0
+
+    juntu_list = []
 
     for i in split_hai:
-        length = len(i)
+        tmp_list = []
         num_list = []
 
+        length = len(i)
         for x in range(length):
-            num = 0
             cnt = 0
+            tmp = 0
             tmp_list = []
 
             if x > 0:
                 i.pop(0)
 
-            if len(i) > 2:
-                for j in i:
-                    n = int(re.sub('^m|^p|^s', '', j))
+            if len(i) < 3:
+                continue
 
-                    if num != 0:
-                        if (num+1) == n:
-                            if num in num_list:
-                                cnt = 0
-                            else:
-                                if cnt == 0:
-                                    tmp_list.append(num)
+            try:
+                index = 0
+                for hai in i:
+                    a, b = hai[:1], int(hai[1:])
+                    if (tmp == 0):
+                        tmp = b
+                        index = index + 1
+                        continue
 
-                                cnt = cnt + 1
-                                tmp_list.append(n)
-                        elif num == n and cnt > 0:
-                            pass
-                        else:
-                            cnt = 0
-                            tmp_list = []
-                    num = n
+                    if b == (tmp+1):
+                        if cnt == 0:
+                            tmp_list.append(i[index-1])
 
-                    num = n
+                        tmp_list.append(hai)
+                        cnt = cnt + 1
+                    elif b == tmp and cnt > 0:
+                        pass
+                    else:
+                        cnt = 0
+                        tmp_list = []
+
+                    tmp = b
 
                     if cnt > 1:
+                        if tmp_list not in juntu_list:
+                            juntu_list.append(tmp_list)
+
                         cnt = 0
-                        juntu_cnt = juntu_cnt + 1
-                        num_list = num_list + tmp_list
                         tmp_list = []
-    return juntu_cnt
+
+                    index = index + 1
+
+            except IndexError:
+                print('配列終わり')
+
+    length = len(juntu_list)
+    if length < 2:
+        return juntu_list
+
+    return juntu_list
 
 
 # 種類別に分割
