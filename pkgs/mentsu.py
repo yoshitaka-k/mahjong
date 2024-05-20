@@ -3,20 +3,51 @@ import collections
 
 
 # 面子確認
-def mentsu(tehai):
+def check_mentsu(tehai):
+    result = []
     tehai_copy = tehai.copy()
 
     split_hai =  __split(tehai_copy)
 
     janto_list = __check_janto(split_hai)
     kotu_list  = __check_kotu(split_hai)
-    kantu_list = __check_kantu(split_hai)
     juntu_list = __check_juntu(split_hai)
 
     print('# 雀頭: '+str(janto_list))
     print('# 刻子: '+str(kotu_list))
-    print('# 槓子: '+str(kantu_list))
     print('# 順子: '+str(juntu_list))
+
+    result.append(janto_list)
+    result.append(kotu_list)
+    result.append(juntu_list)
+
+    return result
+
+
+# 面子数
+def number_of_mentsu(mentsu_list):
+    cnt = 0
+    janto, kotu, juntu = mentsu_list
+
+    if len(janto) == 1:
+        cnt = cnt + 1
+
+    cnt = cnt + len(kotu)
+
+    for l in juntu:
+        j = []
+        for i in l:
+            if i not in janto and i not in kotu:
+                j.append(i)
+
+        if len(j) == 9:
+            cnt = cnt + 3
+        elif len(j) > 5:
+            cnt = cnt + 2
+        elif len(j) > 2:
+            cnt = cnt + 1
+
+    return cnt
 
 
 # 雀頭確認（刻子2個確認）

@@ -115,7 +115,13 @@ def run():
             print('# PLAYER'+str(current)+' 配牌: '+str(tehai))
 
             # 手牌確認
-            pkgs.mentsu(tehai)
+            mentsu_list = pkgs.check_mentsu(tehai)
+            mentsu_num = pkgs.number_of_mentsu(mentsu_list)
+
+            print('mentsu num: '+str(mentsu_num))
+            if mentsu_num == 5:
+                print('メンゼンツモ！')
+
 
             # プレイヤー処理
             sutehai = run_player(current)
