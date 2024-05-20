@@ -35,19 +35,18 @@ def run_player(current):
     else:
         print('# PLAYER'+str(current)+' 河: '+str(globals()['_PLAYER'+str(current)].get_kawa()))
 
-        # 入力
-        value = input('$ Enter an Hai: ')
+        # 捨て牌選択
+        value = ''
+        while (value in tehai) == False:
+            value = input('$ Enter an Hai: ')
 
-        # 空エンター
-        if value == '':
-            hai = _PLAYER1.pop(len(tehai)-1)
-            _PLAYER1.set_kawa(hai)
+            # 空エンターツモ切り
+            if value == '':
+                hai = _PLAYER1.pop(len(tehai)-1)
+                _PLAYER1.set_kawa(hai)
+                break
 
-        else:
-            # 捨て牌選択
-            while (value in tehai) == False:
-                value = input('$ Enter an Hai: ')
-
+        if value != '':
             hai = _PLAYER1.pop(tehai.index(value))
             _PLAYER1.set_kawa(hai)
 
