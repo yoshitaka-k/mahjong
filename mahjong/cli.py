@@ -23,8 +23,9 @@ def run_player(current):
 
     # CPU処理
     if current != 1:
-        # とりあえずツモ切り
-        hai = globals()['_PLAYER'+str(current)].pop(len(tehai)-1)
+        # とりあえず適当に切り
+        r = random.randint(0, len(tehai)-1)
+        hai = globals()['_PLAYER'+str(current)].pop(r)
         globals()['_PLAYER'+str(current)].set_kawa(hai)
 
         print('# PLAYER'+str(current)+' 捨牌: '+hai)
