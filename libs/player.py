@@ -18,7 +18,7 @@ class Player:
         ]
 
 
-    # スコア追加
+    # スコア設定
     def set_score(self, score):
         self.__score__ = score
 

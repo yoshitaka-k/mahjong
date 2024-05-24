@@ -1,4 +1,5 @@
 from mahjong.setting import _NUM_OF_PLAYER
+from mahjong.setting import _INIT_SCORE
 import random
 import libs
 import pkgs
@@ -100,8 +101,13 @@ def run():
             if _TURN > 1:
                 draw_hai = _MAHJONG.draw()
 
+
             print('# TURN: '+str(_TURN)+' / This PLAYER: '+str(current))
             print('# ヤマ牌: '+str(len(_MAHJONG.get_yama()))+' / ドラ表示牌: '+str(_MAHJONG.get_dora()))
+
+            score = f'{globals()['_PLAYER'+str(current)].get_score():,}'
+            print('# PLAYER'+str(current)+' 点数: '+str(score))
+            print('------------------------------')
 
             if _TURN > 1:
                 print('# ツモ: '+str(draw_hai))
@@ -191,6 +197,8 @@ def init():
     # プレイヤー
     for i in range(_NUM_OF_PLAYER):
         globals()['_PLAYER'+str(i+1)] = libs.Player()
+        globals()['_PLAYER'+str(i+1)].set_score(_INIT_SCORE)
+
 
     # サイ振り決め
     dice = _MAHJONG.dice()
