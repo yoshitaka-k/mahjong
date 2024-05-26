@@ -1,5 +1,6 @@
 import re
 import collections
+from pkgs.tehai_split import tehai_split
 
 
 # 面子確認
@@ -7,7 +8,7 @@ def check_mentsu(tehai):
     result = []
     tehai_copy = tehai.copy()
 
-    split_hai =  __split(tehai_copy)
+    split_hai =  tehai_split(tehai_copy)
 
     janto_list = __check_janto(split_hai)
     kotu_list  = __check_kotu(split_hai)
@@ -50,7 +51,7 @@ def number_of_mentsu(mentsu_list):
     return cnt
 
 
-# 雀頭確認（刻子2個確認）
+# 雀頭確認
 def __check_janto(split_hai):
     result = []
 
@@ -146,35 +147,3 @@ def __check_juntu(split_hai):
             print('配列終わり')
 
     return juntu_list
-
-
-# 種類別に分割
-def __split(tehai):
-    split_hai = []
-    m = []
-    p = []
-    s = []
-    k = []
-    j = []
-
-    tehai.sort()
-    length = len(tehai)
-    for i in range(length):
-        if re.search('^m[0-9]', tehai[0]):
-            m.append(tehai.pop(0))
-        elif re.search('^p[0-9]', tehai[0]):
-            p.append(tehai.pop(0))
-        elif re.search('^s[0-9]', tehai[0]):
-            s.append(tehai.pop(0))
-        elif tehai[0] == 'E' or tehai[0] == 'N' or tehai[0] == 'W' or tehai[0] == 'S':
-            k.append(tehai.pop(0))
-        elif tehai[0] == 'hk' or tehai[0] == 'ht' or tehai[0] == 'tn':
-            j.append(tehai.pop(0))
-
-    split_hai.append(m)
-    split_hai.append(p)
-    split_hai.append(s)
-    split_hai.append(k)
-    split_hai.append(j)
-
-    return split_hai
